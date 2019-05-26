@@ -1,0 +1,33 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+
+services:
+
+  db:
+    image: postgres
+    environment:
+      TZ: "Asia/Tokyo"
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: p@ssw0rd
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+    restart: always
+
+  php:
+    build:
+      context: ./dockerfile-php/
+    image: php
+    environment:
+      TZ: "Asia/Tokyo"
+      DOCUMENTROOT: /var/www/html/
+    volumes:
+      - ./php_documentroot:/var/www/html/
+    ports:
+      - 18080:80
+    restart: always
+
+  adminer:
+    image: adminer
+    ports:
+      - 18081:8080
+    restart: always
