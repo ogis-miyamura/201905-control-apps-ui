@@ -1,17 +1,24 @@
 FROM centos:centos7
 
+ARG HTTP_PROXY=http://10.0.0.40:8080
+
+
 # RUN yum update -y
 
 RUN \
-    yum install -y \
+    echo "proxy=${HTTP_PROXY}" >> /etc/yum.conf \
+ && yum -y install \
       wget \
       zip \
       unzip \
       git \
       httpd \
       epel-release \
- && rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm \
  && yum clean all
+
+RUN \
+    rpm --httpproxy ${HTTP_PROXY} -Uvh \
+      http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
 
 
 RUN \
@@ -29,7 +36,7 @@ RUN \
 
 
 RUN \
-    curl -s https://getcomposer.org/installer | php \
+    curl -x ${HTTP_PROXY} -s https://getcomposer.org/installer | php \
  && mv composer.phar /usr/local/bin/
 
 WORKDIR /opt/
@@ -44,6 +51,8 @@ RUN \
 
 # mv /opt/control-apps-ui /var/www/html/
 
+# vi /var/www/html/control-apps-ui/config/app.php
+
 # cd /var/www/html/control-apps-ui/bin
 # ./cake bake all applications
 # ./cake bake all config_templates
@@ -51,7 +60,18 @@ RUN \
 # ./cake bake all server_parameters
 # ./cake bake all servers
 
-# http://x.x.x.x:18080/
-# http://x.x.x.x:18080/index.php/Servers/
+# Adminer
+# http://${Docker-Host}:18081/
+
+# CakePHP Welcome Page
+# http://${Docker-Host}:18080/control-apps-ui/
+
+# Pages
+# http://${Docker-Host}:18080/control-apps-ui/servers/
+# http://${Docker-Host}:18080/control-apps-ui/Applications/
+# http://${Docker-Host}:18080/control-apps-ui/ConfigTemplates/
+# http://${Docker-Host}:18080/control-apps-ui/ParameterTypes/
+# http://${Docker-Host}:18080/control-apps-ui/ServerParameters/
+
 
 CMD [ "/usr/sbin/httpd", "-DFOREGROUND" ]

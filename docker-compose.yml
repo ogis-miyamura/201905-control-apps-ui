@@ -6,11 +6,13 @@ services:
   db:
     image: postgres
     environment:
-      TZ: "Asia/Tokyo"
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: p@ssw0rd
+      - TZ="Asia/Tokyo"
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=p@ssw0rd
     volumes:
       - ./pg_data:/var/lib/postgresql/data
+    ports:
+      - 15432:5432
     restart: always
 
   php:
@@ -18,8 +20,9 @@ services:
       context: ./dockerfile-php/
     image: php
     environment:
-      TZ: "Asia/Tokyo"
-      DOCUMENTROOT: /var/www/html/
+      - HTTP_PROXY
+      - TZ="Asia/Tokyo"
+      - DOCUMENTROOT=/var/www/html/
     volumes:
       - ./php_documentroot:/var/www/html/
     ports:

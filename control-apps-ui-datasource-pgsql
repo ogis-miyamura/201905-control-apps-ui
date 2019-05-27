@@ -1,4 +1,5 @@
-    'Datasources' => [
+#    'Datasources' => [
+
         'default' => [
             'className' => 'Cake\Database\Connection',
             'driver' => 'Cake\Database\Driver\Postgres',
@@ -7,7 +8,7 @@
             //'port' => 'non_standard_port_number',
             'username' => 'postgres',
             'password' => 'p@ssw0rd',
-            'database' => 'control_apps_ui',
+            'database' => 'control-apps-ui',
             'encoding' => 'utf8',
             'timezone' => 'UTC',
             'flags' => [],
@@ -18,4 +19,5 @@
 
             'url' => env('DATABASE_URL', null),
         ],
-    ],
+
+#    ],
