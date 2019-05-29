@@ -58,7 +58,15 @@ RUN \
 # ./cake bake all server_parameters
 # ./cake bake all servers
 
-# http://x.x.x.x:18080/
-# http://x.x.x.x:18080/index.php/Servers/
+# CakePHP Welcome Page
+# http://${Docker-Host}:18080/control-apps-ui/
+
+# Pages
+# http://${Docker-Host}:18080/control-apps-ui/servers/
+# http://${Docker-Host}:18080/control-apps-ui/Applications/
+# http://${Docker-Host}:18080/control-apps-ui/ConfigTemplates/
+# http://${Docker-Host}:18080/control-apps-ui/ParameterTypes/
+# http://${Docker-Host}:18080/control-apps-ui/ServerParameters/
+
 
 CMD [ "/usr/sbin/httpd", "-DFOREGROUND" ]
