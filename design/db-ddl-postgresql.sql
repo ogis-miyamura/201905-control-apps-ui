@@ -1,16 +1,16 @@
--- Project Name : ã‚¢ãƒ—ãƒªç®¡ç†UI ERå›³
--- Date/Time    : 2019/05/26 åˆå¾Œ 11:03:11
--- Author       : miyaa
+-- Project Name : ƒAƒvƒŠŠÇ—UI ER}
+-- Date/Time    : 2019/05/29 18:14:33
+-- Author       : P1868264
 -- RDBMS Type   : PostgreSQL
 -- Application  : A5:SQL Mk-2
 
 /*
-  BackupToTempTable, RestoreFromTempTableç–‘ä¼¼å‘½ä»¤ãŒä»˜åŠ ã•ã‚Œã¦ã„ã¾ã™ã€‚
-  ã“ã‚Œã«ã‚ˆã‚Šã€drop table, create table å¾Œã‚‚ãƒ‡ãƒ¼ã‚¿ãŒæ®‹ã‚Šã¾ã™ã€‚
-  ã“ã®æ©Ÿèƒ½ã¯ä¸€æ™‚çš„ã« $$TableName ã®ã‚ˆã†ãªä¸€æ™‚ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½œæˆã—ã¾ã™ã€‚
+  BackupToTempTable, RestoreFromTempTable‹^—–½—ß‚ª•t‰Á‚³‚ê‚Ä‚¢‚Ü‚·B
+  ‚±‚ê‚É‚æ‚èAdrop table, create table Œã‚àƒf[ƒ^‚ªc‚è‚Ü‚·B
+  ‚±‚Ì‹@”\‚Íˆê“I‚É $$TableName ‚Ì‚æ‚¤‚Èˆêƒe[ƒuƒ‹‚ğì¬‚µ‚Ü‚·B
 */
 
--- ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³
+-- ƒAƒvƒŠƒP[ƒVƒ‡ƒ“
 --* BackupToTempTable
 drop table if exists applications cascade;
 
@@ -24,7 +24,7 @@ create table applications (
   , constraint applications_PKC primary key (id)
 ) ;
 
--- å±æ€§ã‚¿ã‚¤ãƒ—
+-- ‘®«ƒ^ƒCƒv
 --* BackupToTempTable
 drop table if exists parameter_types cascade;
 
@@ -39,7 +39,7 @@ create table parameter_types (
   , constraint parameter_types_PKC primary key (id)
 ) ;
 
--- å¯¾è±¡ã‚µãƒ¼ãƒãƒ¼å±æ€§å€¤
+-- ‘ÎÛƒT[ƒo[‘®«’l
 --* BackupToTempTable
 drop table if exists server_parameters cascade;
 
@@ -56,7 +56,7 @@ create table server_parameters (
   , constraint server_parameters_PKC primary key (id)
 ) ;
 
--- å¯¾è±¡ã‚µãƒ¼ãƒãƒ¼
+-- ‘ÎÛƒT[ƒo[
 --* BackupToTempTable
 drop table if exists servers cascade;
 
@@ -70,7 +70,7 @@ create table servers (
   , constraint servers_PKC primary key (id)
 ) ;
 
--- è¨­å®šãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ
+-- İ’èƒeƒ“ƒvƒŒ[ƒg
 --* BackupToTempTable
 drop table if exists config_templates cascade;
 
@@ -85,6 +85,31 @@ create table config_templates (
   , constraint config_templates_PKC primary key (id)
 ) ;
 
+-- ‘®«ƒrƒ…[
+drop view if exists parameters_view;
+
+create view parameters_view as 
+select
+  sv.title server_title
+  , ap.title application_title
+  , pt.title parameter_type_title
+  , sp.value
+  , sp.comment 
+from
+  servers sv 
+  left join server_parameters sp 
+    on (sp.server_id in (0, sv.id)) 
+  left join applications ap 
+    on ap.id = sp.application_id 
+  left join parameter_types pt 
+    on pt.id = sp.parameter_type_id 
+order by
+  sv.id
+  , ap.id
+  , pt.id
+
+;
+
 alter table server_parameters
   add constraint server_parameters_FK1 foreign key (application_id) references applications(id);
 
@@ -94,43 +119,43 @@ alter table server_parameters
 alter table server_parameters
   add constraint server_parameters_FK3 foreign key (server_id) references servers(id);
 
-comment on table applications is 'ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³';
+comment on table applications is 'ƒAƒvƒŠƒP[ƒVƒ‡ƒ“';
 comment on column applications.id is 'id';
-comment on column applications.title is 'ã‚¿ã‚¤ãƒˆãƒ«';
-comment on column applications.comment is 'ã‚³ãƒ¡ãƒ³ãƒˆ';
-comment on column applications.created is 'ä½œæˆæ—¥æ™‚';
-comment on column applications.updated is 'æ›´æ–°æ—¥æ™‚';
+comment on column applications.title is 'ƒ^ƒCƒgƒ‹';
+comment on column applications.comment is 'ƒRƒƒ“ƒg';
+comment on column applications.created is 'ì¬“ú';
+comment on column applications.updated is 'XV“ú';
 
-comment on table parameter_types is 'å±æ€§ã‚¿ã‚¤ãƒ—';
+comment on table parameter_types is '‘®«ƒ^ƒCƒv';
 comment on column parameter_types.id is 'id';
-comment on column parameter_types.title is 'ã‚¿ã‚¤ãƒˆãƒ«';
-comment on column parameter_types.regex is 'æ­£è¦è¡¨ç¾';
-comment on column parameter_types.comment is 'ã‚³ãƒ¡ãƒ³ãƒˆ';
-comment on column parameter_types.created is 'ä½œæˆæ—¥æ™‚';
-comment on column parameter_types.updated is 'æ›´æ–°æ—¥æ™‚';
+comment on column parameter_types.title is 'ƒ^ƒCƒgƒ‹';
+comment on column parameter_types.regex is '³‹K•\Œ»';
+comment on column parameter_types.comment is 'ƒRƒƒ“ƒg';
+comment on column parameter_types.created is 'ì¬“ú';
+comment on column parameter_types.updated is 'XV“ú';
 
-comment on table server_parameters is 'å¯¾è±¡ã‚µãƒ¼ãƒãƒ¼å±æ€§å€¤';
+comment on table server_parameters is '‘ÎÛƒT[ƒo[‘®«’l';
 comment on column server_parameters.id is 'id';
-comment on column server_parameters.server_id is 'å¯¾è±¡ã‚µãƒ¼ãƒãƒ¼ID';
-comment on column server_parameters.application_id is 'ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ID';
-comment on column server_parameters.parameter_type_id is 'å±æ€§ã‚¿ã‚¤ãƒ—ID';
-comment on column server_parameters.value is 'å€¤';
-comment on column server_parameters.comment is 'ã‚³ãƒ¡ãƒ³ãƒˆ';
-comment on column server_parameters.created is 'ä½œæˆæ—¥æ™‚';
-comment on column server_parameters.updated is 'æ›´æ–°æ—¥æ™‚';
+comment on column server_parameters.server_id is '‘ÎÛƒT[ƒo[ID';
+comment on column server_parameters.application_id is 'ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ID';
+comment on column server_parameters.parameter_type_id is '‘®«ƒ^ƒCƒvID';
+comment on column server_parameters.value is '’l';
+comment on column server_parameters.comment is 'ƒRƒƒ“ƒg';
+comment on column server_parameters.created is 'ì¬“ú';
+comment on column server_parameters.updated is 'XV“ú';
 
-comment on table servers is 'å¯¾è±¡ã‚µãƒ¼ãƒãƒ¼';
+comment on table servers is '‘ÎÛƒT[ƒo[';
 comment on column servers.id is 'id';
-comment on column servers.title is 'ã‚¿ã‚¤ãƒˆãƒ«';
-comment on column servers.comment is 'ã‚³ãƒ¡ãƒ³ãƒˆ';
-comment on column servers.created is 'ä½œæˆæ—¥æ™‚';
-comment on column servers.updated is 'æ›´æ–°æ—¥æ™‚';
+comment on column servers.title is 'ƒ^ƒCƒgƒ‹';
+comment on column servers.comment is 'ƒRƒƒ“ƒg';
+comment on column servers.created is 'ì¬“ú';
+comment on column servers.updated is 'XV“ú';
 
-comment on table config_templates is 'è¨­å®šãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ';
+comment on table config_templates is 'İ’èƒeƒ“ƒvƒŒ[ƒg';
 comment on column config_templates.id is 'id';
-comment on column config_templates.title is 'ã‚¿ã‚¤ãƒˆãƒ«';
-comment on column config_templates.text is 'ãƒ†ã‚­ã‚¹ãƒˆ';
-comment on column config_templates.comment is 'ã‚³ãƒ¡ãƒ³ãƒˆ';
-comment on column config_templates.created is 'ä½œæˆæ—¥æ™‚';
-comment on column config_templates.updated is 'æ›´æ–°æ—¥æ™‚';
+comment on column config_templates.title is 'ƒ^ƒCƒgƒ‹';
+comment on column config_templates.text is 'ƒeƒLƒXƒg';
+comment on column config_templates.comment is 'ƒRƒƒ“ƒg';
+comment on column config_templates.created is 'ì¬“ú';
+comment on column config_templates.updated is 'XV“ú';
 

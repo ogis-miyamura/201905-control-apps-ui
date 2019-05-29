@@ -257,3 +257,18 @@ Top=50
 ZOrder=11
 Width=339
 Height=397
+
+[View]
+PName=parameters_view
+LName=属性ビュー
+Comment=
+ViewOption=
+Query=select\n  sv.title server_title\n  , ap.title application_title\n  , pt.title parameter_type_title\n  , sp.value\n  , sp.comment \nfrom\n  servers sv \n  left join server_parameters sp \n    on (sp.server_id in (0, sv.id)) \n  left join applications ap \n    on ap.id = sp.application_id \n  left join parameter_types pt \n    on pt.id = sp.parameter_type_id \norder by\n  sv.id\n  , ap.id\n  , pt.id\n
+LNameByComment=1
+Color=$000000
+BkColor=$FFFFFF
+Position="Main",1350,200
+ZOrder=12
+Page=Main
+Left=1350
+Top=200
