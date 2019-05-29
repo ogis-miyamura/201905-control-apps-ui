@@ -6,28 +6,45 @@ services:
   db:
     image: postgres
     environment:
-      TZ: "Asia/Tokyo"
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: p@ssw0rd
+      - TZ="Asia/Tokyo"
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=p@ssw0rd
     volumes:
       - ./pg_data:/var/lib/postgresql/data
+    ports:
+      - 15432:5432
     restart: always
 
-  php:
+  php-cake:
     build:
-      context: ./dockerfile-php/
+      context: ./dockerfile-php-cake/
     image: php
     environment:
-      TZ: "Asia/Tokyo"
-      DOCUMENTROOT: /var/www/html/
+      - HTTP_PROXY
+      - TZ="Asia/Tokyo"
+      - DOCUMENTROOT=/var/www/html/
     volumes:
       - ./php_documentroot:/var/www/html/
     ports:
       - 18080:80
     restart: always
 
+  node-express:
+    build:
+      context: ./dockerfile-node-express/
+    image: node-express
+    environment:
+      - HTTP_PROXY
+      - TZ="Asia/Tokyo"
+    volumes:
+      - ./node_documentroot:/usr/src/node-app/
+    ports:
+      - 18081:3000
+    command: [ "sh", "-c", "cd control-apps-ui && npm install && npm run start" ]
+    restart: always
+
   adminer:
     image: adminer
     ports:
-      - 18081:8080
+      - 18090:8080
     restart: always
