@@ -7,7 +7,8 @@ ARG NODE_ENV=development
 WORKDIR /usr/src/node-app
 
 RUN \
-    npm config set proxy ${HTTP_PROXY} \
+    npm -g config set proxy ${HTTP_PROXY} \
+ && npm -g config set registry "http://registry.npmjs.org/" \
  && npm install -g \
       express \
       express-generator \
